@@ -63,6 +63,11 @@ class WebScreenShotUtil():
     @staticmethod
     def __capture_screenshot(webdriver, file_location):
         "Capture a screenshot"
+        def ensure_dir_exist(f):
+            d = os.path.dirname(f)
+            if not os.path.exists(d):
+                os.makedirs(d)
+        ensure_dir_exist(file_location)
         if isinstance(webdriver, remote.webdriver.WebDriver):
             # If this is a remote webdriver.  We need to transmit the image data 
             # back across system boundries as a base 64 encoded string so it can 
