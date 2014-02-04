@@ -19,6 +19,7 @@
 import abc
 from datetime import datetime, timedelta
 import time
+from functools import wraps
 
 from six import u
 from wtframework.wtf import _wtflog
@@ -62,13 +63,12 @@ class PageObject(object):
         except KeyError:
             config_reader = WTF_CONFIG_READER
 
-        
-        self._validate_page(webdriver)
-        
-        # Assign webdriver to PageObject. 
-        # Each page object has an instance of "webdriver" referencing the webdriver 
+        # Assign webdriver to PageObject.
+        # Each page object has an instance of "webdriver" referencing the webdriver
         # driving this page.
         self.webdriver = webdriver
+
+        self._validate_page(self.webdriver)
 
         # Take reference screenshots if this option is enabled.
         if config_reader.get("selenium.take_reference_screenshot", False) == True:
@@ -84,15 +84,14 @@ class PageObject(object):
         else:
             pass
 
-
     @abc.abstractmethod
-    def _validate_page(self, webdriver):
+    def _validate_page(self, webdriver = None):
         """Perform checks to validate this page is the correct target page.
         
         All PageObjects must implement this method.
 
         Args:
-            webdriver (Webdriver) : instance of Selenium Webdriver
+            webdriver (Webdriver) : instance of Selenium Webdriver, left for compatibility. Use self.webdriver instead
         Raises:
             InvalidPageError: Raised when we try to assign the wrong page 
             to this page object.  This exception should be raised when a page match 
@@ -139,9 +138,39 @@ class PageObject(object):
         """
         if not isinstance(other, PageObject):
             # By default page object will rank itself over non page objects.
-            return 1;
+            return 1
         else:
             return 0
+
+    def on_page(self):
+        """Determines if current page still active
+
+        Returns:
+            Bool :: is on page
+        """
+        try:
+            self._validate_page(self.webdriver)
+            return True
+        except InvalidPageError:
+            return False
+
+    @staticmethod
+    def validate():
+        """Decorator to force assertion of page method.
+        This is useful when page may accidentally change. And you want be sure that you are calling action within the page.
+        Example:
+
+        @PageObect.validate()
+        def search(self, search_string):
+        """
+        def wrapper(func):
+            @wraps(func)
+            def wrapped_func(*args, **kwargs):
+                self = args[0]
+                assert self.on_page()
+                return func(*args, **kwargs)
+            return wrapped_func
+        return wrapper
 
 
 class InvalidPageError(Exception):
