@@ -29,8 +29,8 @@ class SearchPage(PageObject):
 
 class GoogleSearch(SearchPage):
     
-    def _validate_page(self, webdriver):
-        if not "google.com" in webdriver.current_url:
+    def _validate_page(self, webdriver=None):
+        if not "google.com" in self.webdriver.current_url:
             raise InvalidPageError("Not google.")
 
     def __cmp__(self, other):
@@ -39,15 +39,15 @@ class GoogleSearch(SearchPage):
 
 class YahooSearch(SearchPage):
     
-    def _validate_page(self, webdriver):
-        if not "yahoo.com" in webdriver.current_url:
+    def _validate_page(self, webdriver=None):
+        if not "yahoo.com" in self.webdriver.current_url:
             raise InvalidPageError("Not yahoo.")
 
 
 class GoogleSearch2(PageObject):
     
-    def _validate_page(self, webdriver):
-        if not "google.com" in webdriver.current_url:
+    def _validate_page(self, webdriver=None):
+        if not "google.com" in self.webdriver.current_url:
             raise InvalidPageError("Not google.")
     def __cmp__(self, other):
         return 1;

@@ -98,9 +98,9 @@ class TestPageObject(unittest2.TestCase):
 
 class GoogleTestPageObj(PageObject):
     "test page"
-    def _validate_page(self, webdriver):
+    def _validate_page(self, webdriver=None):
 
-        current_url = webdriver.current_url
+        current_url = self.webdriver.current_url
 
         if not "google" in current_url:
             raise InvalidPageError()
@@ -119,14 +119,14 @@ class SearchPage(PageObject):
 
 class GoogleSearch(SearchPage):
     
-    def _validate_page(self, webdriver):
-        if not "google.com" in webdriver.current_url:
+    def _validate_page(self, webdriver=None):
+        if not "google.com" in self.webdriver.current_url:
             raise InvalidPageError("Not google.")
 
 class YahooSearch(SearchPage):
     
-    def _validate_page(self, webdriver):
-        if not "yahoo.com" in webdriver.current_url:
+    def _validate_page(self, webdriver=None):
+        if not "yahoo.com" in self.webdriver.current_url:
             raise InvalidPageError("Not yahoo.")
 
 

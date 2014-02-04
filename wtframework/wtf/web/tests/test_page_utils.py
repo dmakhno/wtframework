@@ -27,8 +27,8 @@ import unittest2
 
 class GoogleSearch(PageObject):
     
-    def _validate_page(self, webdriver):
-        if not "google.com" in webdriver.current_url:
+    def _validate_page(self, webdriver=None):
+        if not "google.com" in self.webdriver.current_url:
             raise InvalidPageError("Not google.")
 
 

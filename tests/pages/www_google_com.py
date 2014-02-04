@@ -19,9 +19,9 @@ class GoogleSearchPage(PageObject, ISearchPage):
     
     # Page objects all override the _validate_page() method so pages 
     # can self validate upon creation.
-    def _validate_page(self, webdriver):
+    def _validate_page(self, webdriver=None):
         "Check to make sure we're on google.com"
-        if "google.com" not in webdriver.current_url:
+        if "google.com" not in self.webdriver.current_url:
             # Raise an InvalidPageError to let the PageFactory 
             # know that this isn't a page match.
             raise InvalidPageError("This is not google.")

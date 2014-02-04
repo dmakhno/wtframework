@@ -85,7 +85,7 @@ class PageObject(object):
             pass
 
     @abc.abstractmethod
-    def _validate_page(self, webdriver = None):
+    def _validate_page(self, webdriver=None):
         """Perform checks to validate this page is the correct target page.
         
         All PageObjects must implement this method.
